@@ -1,0 +1,47 @@
+<html>
+<head>
+<style>
+body { margin: 20px; background-color: #222222; font-family: Helvetica, Arial; color: white; } a { color: white; } #status { float:left; } nav { float: right; text-align: right; margin-bottom: 20px; } #images { overflow: hidden; margin-top: 20px; list-style: none; padding: 0;} #images li { float: left; margin-bottom: 10px; }#images.grid6 li { width: 16.66%; height: 16.66%; }#images.grid4 li { width: 25%; height: 25%; }#images.grid2 li { width: 50%; height: 50%; }img { max-width: 100%; max-height: 100%; } ol { clear:both; } #urls { clear: both; margin-top:90px; color: #CCC; }
+</style>
+<script src="http://code.jquery.com/jquery.min.js"></script>
+</head>
+<body>
+<ol id="images" class="grid4">
+</ol>
+<small id="urls">
+<h3>URLs</h3>
+<ol>
+</ol>
+<script> 
+
+function zeroFill(number, length) {
+	var str = number.toString();
+	while (str.length < length) str = "0" + str;
+    return str;
+}
+function addImage(url_part, extension_part, initial_number, number_length, leading_zero) {
+    if (leading_zero) {
+        var src = url_part + zeroFill(initial_number, number_length) + extension_part;
+    } else {
+        var src = url_part + initial_number + extension_part;
+    }
+    $('#images').append($('<li>'));
+    var li = $('#images li:last-of-type');
+
+    $(li).append($('<a>'));
+    var a = $('#images li:last-of-type a').attr('href', src);
+
+    $(a).append($('<img>').attr('src', src).error(function() {
+        $(this).parent().parent().hide();
+    }).load(function () {
+        addImage(url_part, extension_part, initial_number + 1, number_length, leading_zero);
+		$('#urls').append($('<li>').text(src));
+    }));
+}
+
+addImage('http://www.closepics.com/media/galleries/metart_Augusta/Augusta_', '.jpg', 1, 2, true);
+
+
+</script>
+</body>
+</html>
